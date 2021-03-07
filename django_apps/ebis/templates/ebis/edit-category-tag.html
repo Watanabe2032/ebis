@@ -1,0 +1,48 @@
+
+{% extends 'ebis/common-base.html' %}
+
+{% block title %}
+    EBIS-add category
+{% endblock %}
+
+
+{% block content %}
+    <h2>カテゴリーの追加</h2>
+    <div class="message">
+        あまり細かくタグを設定すると備品追加が面倒になるので、なるべくざっくりとした分類を維持してください。
+    </div>
+    <form method="post" name="addtion_params">
+        {% csrf_token %}
+
+        <div>
+        既存のカテゴリー
+        </div>
+        <table class="dataTable">
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>読み</th>
+            </tr>
+            {% for tag in categoryTagList %}
+                <tr>
+                    <td>{{ tag.category_tag_id }}</td>
+                    <td>{{ tag.category_tag_name }}</td>
+                    <td>{{ tag.ruby }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <dl class="equipmentAddtionSetting">
+            <dt>名前</dt>
+            <dd><input type="text" name="categoryTagName" value="{{ postCategoryTagName }}"></dd>
+            <dt>読み</dt>
+            <dd><input type="text" name="categoryTagRuby" value="{{ postCategoryTagRuby }}"></dd>
+            <dt> </dt>
+            <dd>※ ざっくりとソートができるくらいの長さで、読み方もしくはスペルを入力してください。（半角英数）</dd>
+        </dl>
+
+        <input type="submit" value="新規追加" name="categoryTagAdditionButton">
+        <div class="message">{{ message | linebreaksbr }}</div>
+
+    </form>
+{% endblock %}

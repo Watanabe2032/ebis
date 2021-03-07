@@ -1,0 +1,77 @@
+
+{% extends 'ebis/common-base.html' %}
+
+{% block title %}
+    EBIS-add EQP
+{% endblock %}
+
+
+{% block content %}
+    <h2>備品の追加</h2>
+    <form method="post" name="addtion_params">
+        {% csrf_token %}
+
+        <dl class="equipmentAddtionSetting">
+            <dt>正式名</dt>
+            <dd><input type="text" name="fullname" value="{{ postFullname }}"></dd>
+            <dt>表示名</dt>
+            <dd><input type="text" name="displayName" value="{{ postDisplayName }}"></dd>
+            <dt>所有者</dt>
+            <dd>
+                <select name="ownerId">
+                    {% for owner in ownerList %}
+                        {% if postOwnerId and owner.owner_id is postOwnerId %}
+                            <option value={{ owner.owner_id }} selected>{{ owner.display_name }}</option>
+                        {% else %}
+                            <option value={{ owner.owner_id }}>{{ owner.display_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>保管場所</dt>
+            <dd>
+                <select name="storageId">
+                    {% for storage in storageList %}
+                        {% if postStorageId and storage.storage_id is postStorageId %}
+                            <option value={{ storage.storage_id }} selected >{{ storage.display_name }}</option>
+                        {% else %}
+                            <option value={{ storage.storage_id }}>{{ storage.display_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>備品状態</dt>
+            <dd>
+                <select name="equipmentStateId">
+                    {% for equipmentState in equipmentStateList %}
+                        {% if postEquipmentStateId and equipmentState.equipment_state_id is postEquipmentStateId %}
+                            <option value={{ equipmentState.equipment_state_id }} selected>{{ equipmentState.equipment_state_name }}</option>
+                        {% else %}
+                            <option value={{ equipmentState.equipment_state_id }}>{{ equipmentState.equipment_state_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>カテゴリー</dt>
+            <dd>
+                {% for categoryTag in categoryTagList %}
+                    <div>
+                            {% if postCategoryTagIds and categoryTag.category_tag_id in postCategoryTagIds %}
+                                <input type="checkbox" name="categoryTagIds" value="{{ categoryTag.category_tag_id }}" checked>
+                            {% else %}
+                                <input type="checkbox" name="categoryTagIds" value="{{ categoryTag.category_tag_id }}">
+                            {% endif %}
+                            {{ categoryTag.category_tag_name }}
+                    </div>
+                {% endfor %}
+            </dd>
+            <dt>コメント</dt>
+            <dd>
+                <textarea name="equipmentComment" placeholder="{{ commentTemplate }}">{{ postEquipmentComment }}</textarea>
+            </dd>
+        </dl>
+        <div class="message">{{ message | linebreaksbr }}</div>
+        <input type="submit" value="新規追加" name="equipmentAdditionButton">
+    </form>
+
+{% endblock %}

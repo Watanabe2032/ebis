@@ -1,0 +1,212 @@
+
+
+/* ========================================
+//  common-base
+// =======================================*/
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* サイドメニュー */
+.leftNavigation {
+    width: 250px;
+    text-align: left;
+    background-color: #888;
+    color: #fff;
+}
+
+.leftNavigation a {
+    text-decoration: none;
+}
+
+.leftNavigation div {
+    padding-left: 20px;
+}
+
+/* アプリアイコン */
+.homeIcon {
+    border: solid 1px #eee;
+    margin: 1em;
+    /* リンクのクリック範囲指定用 */
+    position: relative;
+}
+
+.homeIcon a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.homeIcon h2 {
+    padding-left: 1em;
+}
+
+/* メインコンテンツ */
+.contents {
+    flex: 1;
+    background-color: #eee;
+    text-align: left;
+    margin-left: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.contents h2 {
+    margin-bottom: 40px;
+}
+
+.message {
+    font-size: large;
+    padding: 20px 10px;
+}
+
+/* ========================================
+//  備品検索結果
+// =======================================*/
+.dataTable {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: solid 1px #444;
+}
+
+table.dataTable th {
+    text-align: center;
+    border-collapse: collapse;
+    border: solid 1px #444;
+}
+
+table.dataTable td {
+    padding-left: 6px;
+    padding-right: 6px;
+    border-collapse: collapse;
+    border: solid 1px #444;
+}
+
+.dataTable button {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.dataTable_editing {
+    width: 60px;
+    text-align: center;
+}
+
+.dataTable_id {
+    width: 60px;
+    text-align: right;
+}
+
+.dataTable_id button {
+    text-align: left;
+}
+
+.dataTable_name {
+    width: 260px;
+}
+
+.dataTable_owner {
+    width: 80px;
+}
+
+.dataTable_user {
+    width: 120px;
+}
+
+.dataTable_user button {
+    margin: 0 0 0 auto;
+}
+
+.dataTable_state {
+    width: 80px;
+}
+
+.dataTable_category {
+    width: 240px;
+}
+
+.dataTable_comment {
+    width: 200px;
+}
+
+/* ========================================
+//  検索条件
+// =======================================*/
+.filterGroup {
+    margin-bottom: 20px;
+    background-color: #eee;
+}
+
+.filterGroup hr {
+    margin-top: 4px;
+}
+
+.filterGroup label {
+    display: inline;
+    white-space: nowrap;
+}
+
+/* ========================================
+//  備品追加画面
+// =======================================*/
+.equipmentAddtionSetting {
+    padding-left: 1px;
+}
+
+.equipmentAddtionSetting dt {
+    width: 100px;
+    padding-bottom: 10px;
+    float: left;
+    clear: both;
+}
+
+.equipmentAddtionSetting dd {
+    padding-bottom: 10px;
+}
+
+.equipmentAddtionSetting input[type="text"] {
+    width: 50%;
+}
+
+.equipmentAddtionSetting div {
+    display: inline; 
+    white-space: nowrap;
+}
+
+.equipmentAddtionSetting label {
+    display: inline; 
+    white-space: nowrap;
+}
+
+.equipmentAddtionSetting textarea {
+    width: 50%;
+    height: 240px;
+    vertical-align: top;
+}
+
+/* ========================================
+//  借用履歴検索結果
+// =======================================*/
+.historyDataTable {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: solid 1px #444;
+}
+
+table.historyDataTable th {
+    text-align: center;
+    border-collapse: collapse;
+    border: solid 1px #444;
+}
+
+table.historyDataTable td {
+    padding-left: 6px;
+    padding-right: 6px;
+    border-collapse: collapse;
+    border: solid 1px #444;
+}

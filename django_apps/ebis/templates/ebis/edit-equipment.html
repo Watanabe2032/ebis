@@ -1,0 +1,98 @@
+
+{% extends 'ebis/common-base.html' %}
+
+{% block title %}
+    EBIS-edit EQP
+{% endblock %}
+
+
+{% block content %}
+    <h2>備品の編集</h2>
+    <form method="post" name="addtion_params">
+        {% csrf_token %}
+
+        <div class="">
+            備品ID
+            <input type="text" name="equipmentId" value="{{ equipmentId }}">
+        </div>
+
+        <input type="submit" value="選択" name="equipmentSearchButton">
+        <div class="searchMessage">
+            {{ searchMessage | linebreaksbr }}
+        </div>
+    </form>
+
+
+    <form method="post" name="editing_params">
+        {% csrf_token %}
+
+        {% if isEquipmentData %}
+            <dl class="equipmentAddtionSetting">
+                <dt>正式名</dt>
+                <dd><input type="text" name="fullname" value="{{ equipmentFullname }}"></dd>
+                <dt>表示名</dt>
+                <dd><input type="text" name="displayName" value="{{ equipmentDisplayName }}"></dd>
+                <dt>所有者</dt>
+                <dd>
+                    <select name="ownerId">
+                        {% for owner in ownerList %}
+                            {% if owner.owner_id is equipmentOwnerId %}
+                                <option value={{ owner.owner_id }} selected>{{ owner.display_name }}</option>
+                            {% else %}
+                                <option value={{ owner.owner_id }}>{{ owner.display_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </dd>
+                <dt>保管場所</dt>
+                <dd>
+                    <select name="storageId">
+                        {% for storage in storageList %}
+                            {% if storage.storage_id is equipmentStorageId %}
+                                <option value={{ storage.storage_id }} selected>{{ storage.display_name }}</option>
+                            {% else %}
+                                <option value={{ storage.storage_id }}>{{ storage.display_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </dd>
+                <dt>備品状態</dt>
+                <dd>
+                    <select name="equipmentStateId">
+                        {% for equipmentState in equipmentStateList %}
+                            {% if equipmentState.equipment_state_id is equipmentStateId %}
+                                <option value={{ equipmentState.equipment_state_id }} selected>{{ equipmentState.equipment_state_name }}</option>
+                            {% else %}
+                                <option value={{ equipmentState.equipment_state_id }}>{{ equipmentState.equipment_state_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </dd>
+                <dt>カテゴリー</dt>
+                <dd>
+                    {% for categoryTag in categoryTagList %}
+                        <div>
+                                {% if categoryTag.category_tag_id in equipmentCategoryTagIds %}
+                                    <input type="checkbox" name="categoryTagIds" value="{{ categoryTag.category_tag_id }}" checked>
+                                {% else %}
+                                    <input type="checkbox" name="categoryTagIds" value="{{ categoryTag.category_tag_id }}">
+                                {% endif %}
+                                {{ categoryTag.category_tag_name }}
+                        </div>
+                    {% endfor %}
+                </dd>
+                <dt>コメント</dt>
+                <dd>
+                    <textarea name="equipmentComment">{{ equipmentComment }}</textarea>
+                </dd>
+            </dl>
+            <button type="submit" name="equipmentEditButton" value="equipmentEditButton{{ equipmentId }}">設定変更</button>
+        {% else %}
+        {% endif %}
+        <div class="editMessage">
+            {{ editMessage | linebreaksbr }}
+        </div>
+    </form>
+
+
+{% endblock %}
