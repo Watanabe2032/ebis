@@ -1,0 +1,113 @@
+
+{% extends 'ebis/common-base.html' %}
+
+{% block title %}
+    EBIS-history
+{% endblock %}
+
+
+{% block content %}
+    <h2>備品借用履歴</h2>
+    <form method="post" name="addtion_params">
+        {% csrf_token %}
+
+        {% comment %} 備品検索 {% endcomment %}
+        <div class="">
+            備品ID
+            {% if selectedEquipmentId %}
+                <input type="text" name="equipmentId" value="{{ selectedEquipmentId }}">
+            {% else %}
+                <input type="text" name="equipmentId">
+            {% endif %}
+        </div>
+        <input type="submit" value="検索" name="equipmentSearchButton">
+
+        <div>
+            {{ resultMessage }}
+            {{ errorMessage }}
+        </div>
+
+        <div>
+            {% if equipmentDatum %}
+                {% comment %} 検索結果 {% endcomment %}
+                <h3>備品情報</h3>
+                <hr>
+                <table class="dataTable">
+                    <tr>
+                        <th class="dataTable_id">備品ID</th>
+                        <th class="dataTable_name">備品名</th>
+                        <th class="dataTable_owner">所有者</th>
+                        <th class="dataTable_user">使用者</th>
+                        <th class="dataTable_state">状態</th>
+                        <th class="dataTable_category">カテゴリー</th>
+                        <th class="dataTable_comment">コメント</th>
+                    </tr>
+                    <tr>
+                        <td class="dataTable_id">
+                            {{ equipmentDatum.equipmentTable.equipment_id }}
+                        </td> 
+                        <td>{{ equipmentDatum.equipmentTable.display_name }}</td>
+                        <td>{{ equipmentDatum.equipmentTable.owner_id.display_name }}</td>
+                        {% if equipmentDatum.atelicBorrowingHistories %}
+                            <td>{{ equipmentDatum.atelicBorrowingHistories.0.user_id.display_name }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ equipmentDatum.equipmentTable.equipment_state_id.equipment_state_name }}</td>
+                        {% if equipmentDatum.categoryTags %}
+                            <td>
+                            {% for tag in equipmentDatum.categoryTags %}
+                                {{ tag.category_tag_name }}, 
+                            {% endfor %}
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if equipmentDatum.equipmentTable.comment %}
+                            <td>{{ equipmentDatum.equipmentTable.comment }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                </table>
+
+                <br>
+                <br>
+
+                {% comment %} 借用履歴 {% endcomment %}
+                <h3>借用履歴</h3>
+                <hr>
+                <table class="historyDataTable">
+                    <tr>
+                        <th>使用者</th>
+                        <th>借用日時</th>
+                        <th>返却日時</th>
+                        <th>返却情報</th>
+                    </tr>
+                    {% if borrowingHistoryList %}
+                        {% for hist in borrowingHistoryList %}
+                    <tr>
+                            <td>{{ hist.user_id.display_name }}</td>
+                            <td>{{ hist.borrowind_datetime | date:"y-n-j H:i:s" }}</td>
+                            <td>{{ hist.return_datetime | date:"y-n-j H:i:s" }}</td>
+                            {% if hist.is_returned == 1 %}
+                                <td>返却済み</td>
+                            {% else %}
+                                <td>使用中</td>
+                            {% endif %}
+                    </tr>
+                        {% endfor %}
+                    {% else %}
+                    {% endif %}
+                </table>
+                
+            {% else %}
+                該当する備品はありません
+            {% endif %}
+        </div>
+
+
+
+    </form>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+
+{% extends 'ebis/common-base.html' %}
+
+{% block title %}
+    EBIS-brrower
+{% endblock %}
+
+
+{% block content %}
+    <h2>備品使用者の変更</h2>
+    <form method="post" name="addtion_params">
+        {% csrf_token %}
+
+        {% comment %} 備品検索 {% endcomment %}
+        <div class="">
+            備品ID
+            {% if selectedEquipmentId %}
+                <input type="text" name="equipmentId" value="{{ selectedEquipmentId }}">
+            {% else %}
+                <input type="text" name="equipmentId">
+            {% endif %}
+        </div>
+        <input type="submit" value="検索" name="equipmentSearchButton">
+
+        <div>
+            {{ resultMessage }}
+            {{ errorMessage }}
+        </div>
+
+        <div>
+            {% if equipmentDatum %}
+                {% comment %} 検索結果 {% endcomment %}
+                <h3>検索結果</h3>
+                <hr>
+                <table class="dataTable">
+                    <tr>
+                        <th class="dataTable_id">備品ID</th>
+                        <th class="dataTable_name">備品名</th>
+                        <th class="dataTable_owner">所有者</th>
+                        <th class="dataTable_user">使用者</th>
+                        <th class="dataTable_state">状態</th>
+                        <th class="dataTable_category">カテゴリー</th>
+                        <th class="dataTable_comment">コメント</th>
+                    </tr>
+                    <tr>
+                        <td class="dataTable_id">
+                            {{ equipmentDatum.equipmentTable.equipment_id }}
+                        </td> 
+                        <td>{{ equipmentDatum.equipmentTable.display_name }}</td>
+                        <td>{{ equipmentDatum.equipmentTable.owner_id.display_name }}</td>
+                        {% if equipmentDatum.atelicBorrowingHistories %}
+                            <td>{{ equipmentDatum.atelicBorrowingHistories.0.user_id.display_name }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ equipmentDatum.equipmentTable.equipment_state_id.equipment_state_name }}</td>
+                        {% if equipmentDatum.categoryTags %}
+                            <td>
+                            {% for tag in equipmentDatum.categoryTags %}
+                                {{ tag.category_tag_name }}, 
+                            {% endfor %}
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if equipmentDatum.equipmentTable.comment %}
+                            <td>{{ equipmentDatum.equipmentTable.comment }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                </table>
+
+                {% comment %} 使用者選択 {% endcomment %}
+                <dl class="equipmentAddtionSetting">
+                    <dt>使用者</dt>
+                    <dd>
+                        <div>
+                            {% if equipmentDatum.atelicBorrowingHistories %}
+                                <input type="radio" name="selectedUser" value="-1">
+                            {% else %}
+                                <input type="radio" name="selectedUser" value="-1" checked>
+                            {% endif %}
+                            使用者なし
+                        </div>
+                    </dd>
+                    <dt>&nbsp</dt>
+                    <dd>
+                        {% for user in userList %}
+                            <div>
+                                {% if equipmentDatum.atelicBorrowingHistories and user.user_id is equipmentDatum.atelicBorrowingHistories.0.user_id.user_id %}
+                                    <input type="radio" name="selectedUser" value="{{ user.user_id }}" checked>
+                                {% else %}
+                                    <input type="radio" name="selectedUser" value="{{ user.user_id }}">
+                                {% endif %}
+                                {{ user.display_name }}
+                            </div>
+                        {% endfor %}
+                    </dd>
+                </dl>
+            {% comment %} <input type="submit" value="使用者を変更する" name="borrowerEditButton"> {% endcomment %}
+            <button type="submit" name="borrowerEditButton" value="borrowerEditButton{{ equipmentDatum.equipmentTable.equipment_id }}">使用者を変更する</button>
+
+            {% else %}
+                該当する備品はありません
+            {% endif %}
+        </div>
+
+
+
+    </form>
+
+{% endblock %}

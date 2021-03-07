@@ -1,0 +1,181 @@
+
+{% extends 'ebis/common-base.html' %}
+
+{% block title %}
+    EBIS-search
+{% endblock %}
+
+
+{% block content %}
+    <h2>検索条件</h2>
+    <form method="post" name="search_params">
+        {% csrf_token %}
+        
+        {% comment %} 検索条件ーワード {% endcomment %}
+        <div class="filterGroup">
+            検索ワード
+            {% if searchWordParams %}
+                <input type="text" name="searchWordParams" value="{{ searchWordParams.0 }}">
+            {% else %}
+                <input type="text" name="searchWordParams">
+            {% endif %}
+        </div>
+        
+        {% comment %} 検索条件ー所有者 {% endcomment %}
+        <div class="filterGroup">
+            {% if ownerParams %}
+                <details open>
+            {% else %}
+                <details>
+            {% endif %}
+                <summary>
+                    所有者
+                </summary>
+                <hr>
+                {% for owner in ownerList %}
+                    <label>
+                        {% if ownerParams and owner.owner_id in ownerParams %}
+                            <input type="checkbox" name="ownerParams" value="{{ owner.owner_id }}" checked>
+                        {% else %}
+                            <input type="checkbox" name="ownerParams" value="{{ owner.owner_id }}">
+                        {% endif %}
+                        {{ owner.display_name }}
+                    </label>
+                {% endfor %}
+            </details>
+        </div>
+        
+        {% comment %} 検索条件ー現在利用者 {% endcomment %}
+        <div class="filterGroup">
+            {% if userParams %}
+                <details open>
+            {% else %}
+                <details>
+            {% endif %}
+                <summary>
+                    使用者
+                </summary>
+                <hr>
+                {% for user in userList %}
+                    <label>
+                        {% if userParams and user.user_id in userParams %}
+                            <input type="checkbox" name="userParams" value="{{ user.user_id }}" checked>
+                        {% else %}
+                            <input type="checkbox" name="userParams" value="{{ user.user_id }}">
+                        {% endif %}
+                        {{ user.display_name }}
+                    </label>
+                {% endfor %}
+            </details>
+        </div>
+        
+        {% comment %} 検索条件ー分類タグ {% endcomment %}
+        <div class="filterGroup">
+            {% if categoryTagParams %}
+                <details open>
+            {% else %}
+                <details>
+            {% endif %}
+                <summary>
+                    カテゴリータグ
+                </summary>
+                <hr>
+                {% for categoryTag in categoryTagList %}
+                    <label>
+                        {% if categoryTagParams and categoryTag.category_tag_id in categoryTagParams %}
+                            <input type="checkbox" name="categoryTagParams" value="{{ categoryTag.category_tag_id }}" checked>
+                        {% else %}
+                            <input type="checkbox" name="categoryTagParams" value="{{ categoryTag.category_tag_id }}">
+                        {% endif %}
+                        {{ categoryTag.category_tag_name }}
+                    </label>
+                {% endfor %}
+            </details>
+        </div>
+        
+        {% comment %} 検索条件ー備品状態 {% endcomment %}
+        <div class="filterGroup">
+            {% if equipmentStateParams %}
+                <details open>
+            {% else %}
+                <details>
+            {% endif %}
+                <summary>
+                    備品状態
+                </summary>
+                <hr>
+                {% for equipmentState in equipmentStateList %}
+                    <label>
+                        {% if equipmentStateParams and equipmentState.equipment_state_id in equipmentStateParams %}
+                            <input type="checkbox" name="equipmentStateParams" value="{{ equipmentState.equipment_state_id }}" checked>
+                        {% else %}
+                            <input type="checkbox" name="equipmentStateParams" value="{{ equipmentState.equipment_state_id }}">
+                        {% endif %}
+                        {{ equipmentState.equipment_state_name }}
+                    </label>
+                {% endfor %}
+            </details>
+        </div>
+
+        <input type="submit" value="検索" name="equipmentSearchButton">
+    </form>
+
+    {% comment %} 検索結果 {% endcomment %}
+    <div>
+        <h3>検索結果</h3>
+        <hr>
+
+        {% if equipmentDatumList %}
+            <table class="dataTable">
+                <tr>
+                    <th class="dataTable_editing"></th>
+                    <th class="dataTable_id">備品ID</th>
+                    <th class="dataTable_name">備品名</th>
+                    <th class="dataTable_owner">所有者</th>
+                    <th class="dataTable_user">使用者</th>
+                    <th class="dataTable_state">状態</th>
+                    <th class="dataTable_category">カテゴリー</th>
+                    <th class="dataTable_comment">コメント</th>
+                </tr>
+                {% for data in equipmentDatumList %}
+                    <tr>
+                        <form method="post" name="selected_equipment" action="{% url 'ebis:edit-equipment' %}">
+                            {% csrf_token %}
+                            <td><button type="submit" name="equipmentEditButtonFromSearchEquipment" value="equipmentEditButtonFromSearchEquipment{{ data.equipmentTable.equipment_id }}">編集</button></td>
+                        </form>
+                        <td class="dataTable_id">{{ data.equipmentTable.equipment_id }}</td> 
+                        <td>{{ data.equipmentTable.display_name }}</td>
+                        <td>{{ data.equipmentTable.owner_id.display_name }}</td>
+                        <td>
+                            <form method="post" name="selected_equipment" action="{% url 'ebis:edit-equipment-user' %}">
+                                {% csrf_token %}
+                                <button type="submit" name="userEditButton" value="userEditButton{{ data.equipmentTable.equipment_id }}">変更</button>
+                            </form>
+                            {% if data.atelicBorrowingHistories %}
+                                    {{ data.atelicBorrowingHistories.0.user_id.display_name }}
+                            {% endif %}
+                        </td>
+                        <td>{{ data.equipmentTable.equipment_state_id.equipment_state_name }}</td>
+                        {% if data.categoryTags %}
+                            <td>
+                            {% for tag in data.categoryTags %}
+                                {{ tag.category_tag_name }}, 
+                            {% endfor %}
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if data.equipmentTable.comment %}
+                            <td>{{ data.equipmentTable.comment }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            該当する備品はありません
+        {% endif %}
+    </div>
+
+{% endblock %}

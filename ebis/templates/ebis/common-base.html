@@ -1,0 +1,62 @@
+{% load static %}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTC XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <title>
+        {% block title %}
+            EBIS
+        {% endblock %}
+    </title>
+</head>
+
+<body>
+    <link rel="stylesheet" type="text/css" href="{% static 'ebis/ebis.css' %}">
+    <header class="leftNavigation">
+        {% block commonNavigation %}
+            <div class="homeIcon">
+                <h2>HOME</h2>
+                <a href="{% url 'ebis:home' %}"></a>
+            </div>
+            <div>
+                <details open>
+                    <summary>使い方</summary>
+                    <ul>
+                        <li>借用・返却</li>
+                        <li>備品の検索</li>
+                        <li>備品の追加・編集</li>
+                        <li>設定値の追加・編集</li>
+                    </ul>
+                </details>
+                <details open>
+                    <summary>備品</summary>
+                    <ul>
+                        <li><a href="{% url 'ebis:search-equipment' %}">検索</a></li>
+                        <li><a href="{% url 'ebis:edit-equipment-user' %}">使用者の変更</a></li>
+                        <li><a href="{% url 'ebis:show-borrowing-history' %}">借用履歴</a></li>
+                    </ol>
+                </details>
+                <details open>
+                    <summary>管理</summary>
+                    <ul>
+                        <li><a href="{% url 'ebis:add-equipment' %}">備品の追加</a></li>
+                        <li><a href="{% url 'ebis:edit-equipment' %}">備品の編集</a></li>
+                        <li><a href="{% url 'ebis:edit-category-tag' %}">カテゴリー</a></li>
+                    </ul>
+                </details>
+            </div>
+        {% endblock %}
+    </header>
+    
+    <div class="contents">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+
+</html>
